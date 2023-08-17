@@ -15,16 +15,16 @@ function createNav() {
     logoDiv.classList.add('logo');
 
     const menuIcon = document.createElement('i');
-    menuIcon.classList.add('fa-solid','fa-bars');
+    menuIcon.classList.add('fa-solid', 'fa-bars');
 
     const homeIcon = document.createElement('i');
-    homeIcon.classList.add('fa-solid','fa-house');
+    homeIcon.classList.add('fa-solid', 'fa-house');
 
     leftDiv.appendChild(menuIcon);
     leftDiv.appendChild(homeIcon);
 
     const addIcon = document.createElement('i');
-    addIcon.classList.add('fa-solid','fa-plus');
+    addIcon.classList.add('fa-solid', 'fa-plus');
 
     const title = document.createElement('h1');
     title.textContent = 'ToDo';
