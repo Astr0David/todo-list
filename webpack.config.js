@@ -19,7 +19,8 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Page Title',
+            title: 'Todo',
+            favicon: 'src/assets/list.png',
         }),
     ],
     module: {
