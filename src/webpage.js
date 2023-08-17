@@ -2,6 +2,9 @@ function createNav() {
     const nav = document.createElement('div');
     nav.classList.add('nav');
 
+    const navInner = document.createElement('div');
+    navInner.classList.add('nav-inner')
+
     const leftDiv = document.createElement('div');
     leftDiv.classList.add('left-nav');
 
@@ -21,23 +24,21 @@ function createNav() {
     leftDiv.appendChild(homeIcon);
 
     const addIcon = document.createElement('i');
-    addIcon.classList.add('fas','fa-plus');
-
-    const listIcon = document.createElement('i');
-    listIcon.classList.add('fas','fa-list');
+    addIcon.classList.add('fa-solid','fa-plus');
 
     const title = document.createElement('h1');
     title.textContent = 'ToDo';
     title.classList.add('title');
 
     logoDiv.appendChild(title);
-    logoDiv.appendChild(listIcon);
 
     rightDiv.appendChild(addIcon);
     rightDiv.appendChild(logoDiv);
 
-    nav.appendChild(leftDiv);
-    nav.appendChild(rightDiv);
+    navInner.appendChild(leftDiv);
+    navInner.appendChild(rightDiv);
+
+    nav.appendChild(navInner);
 
     return nav
 }
