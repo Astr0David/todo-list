@@ -1,5 +1,4 @@
 import './style.css';
-import '@fortawesome/fontawesome-free/css/all.css';
 import createWebpage from './webpage';
 
 const mainContent = document.createElement('div');
