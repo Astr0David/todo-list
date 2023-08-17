@@ -1,5 +1,5 @@
 function createNav() {
-    const nav = document.createElement('nav');
+    const nav = document.createElement('div');
     nav.classList.add('nav');
 
     const leftDiv = document.createElement('div');
@@ -21,10 +21,10 @@ function createNav() {
     leftDiv.appendChild(homeIcon);
 
     const addIcon = document.createElement('i');
-    addIcon.classList.add('fa-solid','fa-plus');
+    addIcon.classList.add('fas','fa-plus');
 
     const listIcon = document.createElement('i');
-    listIcon.classList.add('fa-solid','fa-list');
+    listIcon.classList.add('fas','fa-list');
 
     const title = document.createElement('h1');
     title.textContent = 'ToDo';
@@ -41,3 +41,11 @@ function createNav() {
 
     return nav
 }
+
+function createWebpage() {
+    const mainContent = document.getElementById("content");
+
+    mainContent.appendChild(createNav())
+}
+
+export default createWebpage;
