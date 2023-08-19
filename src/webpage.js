@@ -1,3 +1,6 @@
+import './style.css'
+import initializeSidebar from './sidebar'
+
 function createNav() {
     const nav = document.createElement('div');
     nav.classList.add('nav');
@@ -15,10 +18,12 @@ function createNav() {
     logoDiv.classList.add('logo');
 
     const menuIcon = document.createElement('i');
-    menuIcon.classList.add('fa-solid', 'fa-bars');
+    menuIcon.classList.add('fa-solid', 'fa-bars-staggered');
+    menuIcon.setAttribute('id', 'toggle-sidebar');
 
     const homeIcon = document.createElement('i');
     homeIcon.classList.add('fa-solid', 'fa-house');
+    homeIcon.setAttribute('id', 'toggle-home');
 
     leftDiv.appendChild(menuIcon);
     leftDiv.appendChild(homeIcon);
@@ -43,10 +48,22 @@ function createNav() {
     return nav
 }
 
+function createMain() {
+    const main = document.createElement('div');
+    main.classList.add('main');
+    main.setAttribute('id', 'main');
+
+    
+    return main
+}
+
 function createWebpage() {
     const mainContent = document.getElementById("content");
+    
+    mainContent.appendChild(createNav());
+    mainContent.appendChild(createMain());
 
-    mainContent.appendChild(createNav())
+    initializeSidebar()
 }
 
 export default createWebpage;
