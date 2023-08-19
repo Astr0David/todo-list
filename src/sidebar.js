@@ -41,10 +41,25 @@ function createSidebar() {
     const lists = document.createElement('li');
     lists.classList.add('lists', 'nav-buttons');
     lists.innerHTML = '<div><i class="fa-solid fa-list-check"></i> <p>Lists</p></div> <div><i class="fa-solid fa-chevron-up"></i></div>';
-    lists.addEventListener("click", (e) => {
-        const chevronIcon = lists.querySelector(".fa-chevron-up");
-        chevronIcon.classList.toggle("fa-chevron-down");
+    lists.addEventListener("click", listClick);
+
+    const accordion = document.createElement('div');
+    accordion.classList.add('accordion');
+
+    const newLists = document.createElement('div');
+    newLists.classList.add('new-lists');
+    newLists.innerHTML = '<div class = "nav-buttons"><i class="fa-solid fa-circle"></i> Daily Tasks</div><div class = "nav-buttons"><i class="fa-solid fa-circle"></i> Daily Tasks</div>'
+    newLists.addEventListener("click", (e) => {
+        if (e.target.classList.contains("active")) return;
+        setActiveButton(e.target);
     });
+
+    const createNew = document.createElement('div');
+    createNew.classList.add('create-new');
+    createNew.innerHTML = '<i class="fa-solid fa-plus"></i> New List'
+
+    accordion.appendChild(newLists);
+    accordion.appendChild(createNew);
 
     menu.appendChild(inbox);
     menu.appendChild(today);
@@ -52,6 +67,7 @@ function createSidebar() {
     menu.appendChild(all);
     menu.appendChild(important);
     menu.appendChild(lists);
+    menu.appendChild(accordion)
 
     sidebarMenu.appendChild(menu);
 
@@ -83,6 +99,20 @@ function setActiveButton(button) {
     });
 
     button.classList.add("active");
+}
+
+function listClick() {
+    const lists = document.querySelector('.lists')
+    const chevronIcon = lists.querySelector(".fa-chevron-up");
+    chevronIcon.classList.toggle("fa-chevron-down");
+
+    const panel = document.querySelector('.accordion');
+
+    if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+    } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+    }
 }
 
 function sidebarAnimate() {

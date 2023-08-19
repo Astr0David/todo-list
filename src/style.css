@@ -60,7 +60,7 @@ body {
     user-select: none;
 }
 
-.fa-plus {
+.nav .fa-plus {
     font-size: 1.25rem;
     background-color: #f1faee;
     padding: 0.25rem;
@@ -68,11 +68,11 @@ body {
     color: #1d3557;
 }
 
-.fa-plus:hover {
+.nav .fa-plus:hover {
     opacity: 50%;
 }
 
-.fa-plus:active {
+.nav .fa-plus:active {
     transform: scale(0.95);
 }
 
@@ -95,7 +95,7 @@ body {
     transition: 0.3s ease;
 }
 
-.fa-solid {
+.nav .fa-solid {
     cursor: pointer;
     transform: 0.2s ease;
 }
@@ -147,9 +147,10 @@ body {
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.2s ease;
+    user-select: none;
 }
 
-.menu li:hover {
+.nav-buttons:hover {
     background-color: #dad7cd;
 }
 
@@ -163,8 +164,8 @@ body {
     padding-right: 1rem;
 }
 
-.menu li.active {
-    font-weight: 500;
+.nav-buttons.active {
+    font-weight: 400;
 }
 
 .today i {
@@ -194,8 +195,74 @@ body {
     color: green;
 }
 
+.menu .lists {
+    margin-bottom: .5rem;
+}
+
 .lists .fa-chevron-up {
     color: black;
     font-size: 1rem;
     padding-top: 0.1rem;
+}
+
+.accordion {
+    padding-left: 2.5rem;
+    font-size: 1rem;
+    transition: max-height 0.2s ease-out;
+    overflow: hidden;
+    max-height: 0;
+
+}
+
+.create-new i {
+    padding-right: .25rem;
+    opacity: 65%;
+}
+
+.accordion .create-new {
+    padding-left: 1.5rem;
+    padding-top: .5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.1s ease-in-out;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.accordion .create-new:hover {
+    color: white;
+    transform: translateX(-5%)
+}
+
+.accordion .create-new:active {
+    color: black;
+    opacity: 80%;
+}
+
+.accordion .new-lists {
+    display: grid;
+    align-items: center;
+    justify-content: flex-start;
+    grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(1fr));
+}
+
+.accordion .new-lists i {
+    padding-right: .5rem;
+    font-size: .5rem;
+    opacity: 50%;
+}
+
+.new-lists div {
+    padding: .5rem;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    user-select: none;
+    cursor: pointer;
+    font-weight: 300;
 }
