@@ -240,14 +240,6 @@ body {
     opacity: 80%;
 }
 
-.accordion .new-lists {
-    display: grid;
-    align-items: center;
-    justify-content: flex-start;
-    grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
-    grid-template-rows: repeat(auto-fill, minmax(1fr));
-}
-
 .accordion .new-lists i {
     padding-right: .5rem;
     font-size: .5rem;
