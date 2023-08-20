@@ -108,6 +108,25 @@ body {
     transform: scale(0.95);
 }
 
+.center-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#dateInput {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #dad7cd;
+    text-transform: uppercase;
+    background-color: #588157;
+    border-radius: 4px;
+    padding: 0.4rem 1rem;
+    text-align: center;
+  }
+
 .main {
     grid-area: main;
     display: grid;
