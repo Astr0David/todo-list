@@ -40,7 +40,6 @@ function createSidebar() {
 
     const lists = document.createElement('li');
     lists.classList.add('lists');
-    lists.innerHTML = '<div><i class="fa-solid fa-list-check"></i> <p>Lists</p></div> <div><i class="fa-solid fa-chevron-up"></i></div>';
     lists.addEventListener("click", listClick);
 
     const accordion = document.createElement('div');
