@@ -29,9 +29,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 45px;
     color: #f1faee;
     position: sticky;
+    top: 0;
     z-index: 100;
 }
 
@@ -408,7 +408,6 @@ body {
 .popup .popup-bot #addition:active {
     transform: scale(1);
 }
-
 
 @media (max-width: 600px) {
     .popup {
