@@ -116,7 +116,7 @@ function newListPopup() {
     inputParagraph.textContent = 'Name (max 15 characters):';
 
     const input = document.createElement('input');
-    input.setAttribute('id','newlistinput');
+    input.setAttribute('id', 'newlistinput');
     input.setAttribute('type', 'text');
     input.setAttribute('maxlength', '15');
     input.setAttribute('required', true);
@@ -176,15 +176,16 @@ function addNewList() {
     const inputValue = input.value;
 
     if (input.checkValidity() === false) {
-        alert.style.display ='block';
+        alert.style.display = 'block';
         input.style.borderColor = 'red';
     } else {
         const newLists = document.querySelector('.new-lists');
         newLists.innerHTML += `<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>${inputValue}</div>`
+        input.value = '';
         panel.style.maxHeight = panel.scrollHeight + "px";
         alert.style.display = 'none';
         closeOverlay()
-    } 
+    }
 }
 
 function setActiveButton(button) {
