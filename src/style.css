@@ -254,11 +254,6 @@ body {
     transform: translateX(-5%)
 }
 
-.accordion .create-new:active {
-    color: black;
-    opacity: 80%;
-}
-
 .accordion .new-lists i {
     padding-right: .5rem;
     font-size: .5rem;
