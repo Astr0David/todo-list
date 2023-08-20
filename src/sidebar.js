@@ -40,6 +40,7 @@ function createSidebar() {
 
     const lists = document.createElement('li');
     lists.classList.add('lists');
+    lists.innerHTML = '<div><i class="fa-solid fa-list-check"></i> <p>Lists</p></div> <div><i class="fa-solid fa-chevron-up"></i></div>';
     lists.addEventListener("click", listClick);
 
     const accordion = document.createElement('div');
@@ -47,7 +48,6 @@ function createSidebar() {
 
     const newLists = document.createElement('div');
     newLists.classList.add('new-lists');
-    newLists.innerHTML = '<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>Daily Tasks</div>'
     newLists.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(e.target);
