@@ -48,7 +48,7 @@ function createSidebar() {
 
     const newLists = document.createElement('div');
     newLists.classList.add('new-lists');
-    newLists.innerHTML = '<div class = "nav-buttons"><i class="fa-solid fa-circle"></i> Daily Tasks</div><div class = "nav-buttons"><i class="fa-solid fa-circle"></i> Daily Tasks</div>'
+    newLists.innerHTML = '<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>Daily Tasks</div><div class = "nav-buttons"><i class="fa-solid fa-circle"></i>Daily Tasks</div>'
     newLists.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(e.target);
