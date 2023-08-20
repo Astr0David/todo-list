@@ -48,7 +48,7 @@ function createSidebar() {
 
     const newLists = document.createElement('div');
     newLists.classList.add('new-lists');
-    newLists.innerHTML = '<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>Daily Tasks</div><div class = "nav-buttons"><i class="fa-solid fa-circle"></i>Daily Tasks</div>'
+    newLists.innerHTML = '<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>Daily Tasks</div>'
     newLists.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(e.target);
@@ -57,6 +57,7 @@ function createSidebar() {
     const createNew = document.createElement('div');
     createNew.classList.add('create-new');
     createNew.innerHTML = '<i class="fa-solid fa-plus"></i> New List'
+    createNew.addEventListener('click', newListButton);
 
     accordion.appendChild(newLists);
     accordion.appendChild(createNew);
@@ -87,6 +88,104 @@ function createSidebarItem(className, iconClass, text) {
     item.appendChild(itemContent);
 
     return item;
+}
+
+function newListPopup() {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    const popup = document.createElement('div');
+    popup.classList.add('popup');
+
+    const popupTop = document.createElement('div');
+    popupTop.classList.add('popup-top');
+
+    const titleParagraph = document.createElement('p');
+    titleParagraph.textContent = 'New List';
+
+    const closeIcon = document.createElement('i');
+    closeIcon.classList.add('fa-solid', 'fa-xmark');
+    closeIcon.addEventListener('click', closeOverlay);
+
+    popupTop.appendChild(titleParagraph);
+    popupTop.appendChild(closeIcon);
+
+    const popupMid = document.createElement('div');
+    popupMid.classList.add('popup-mid');
+
+    const inputParagraph = document.createElement('p');
+    inputParagraph.textContent = 'Name (max 15 characters):';
+
+    const input = document.createElement('input');
+    input.setAttribute('id','newlistinput');
+    input.setAttribute('type', 'text');
+    input.setAttribute('maxlength', '15');
+    input.setAttribute('required', true);
+
+    const alertParagraph = document.createElement('p');
+    alertParagraph.classList.add('alert');
+    alertParagraph.textContent = 'List name is required.';
+    alertParagraph.style.color = 'red';
+    alertParagraph.style.marginTop = '.5rem';
+    alertParagraph.style.display = 'none';
+
+    popupMid.appendChild(inputParagraph);
+    popupMid.appendChild(input);
+    popupMid.appendChild(alertParagraph);
+
+    const popupBot = document.createElement('div');
+    popupBot.classList.add('popup-bot');
+
+    const closeButton = document.createElement('button');
+    closeButton.setAttribute('id', 'close');
+    closeButton.textContent = 'Close';
+    closeButton.addEventListener('click', closeOverlay)
+
+    const addButton = document.createElement('button');
+    addButton.setAttribute('id', 'addition');
+    addButton.textContent = 'Add List';
+    addButton.addEventListener('click', addNewList)
+
+    popupBot.appendChild(closeButton);
+    popupBot.appendChild(addButton);
+
+    popup.appendChild(popupTop);
+    popup.appendChild(popupMid);
+    popup.appendChild(popupBot);
+
+    overlay.appendChild(popup);
+
+    const mainContent = document.getElementById('content');
+    mainContent.appendChild(overlay);
+}
+
+function newListButton() {
+    const overlay = document.querySelector('.overlay');
+    overlay.style.display = 'flex'
+}
+
+function closeOverlay() {
+    const overlay = document.querySelector('.overlay');
+    overlay.style.display = 'none'
+}
+
+function addNewList() {
+    const input = document.getElementById('newlistinput');
+    const alert = document.querySelector('.alert');
+    const panel = document.querySelector('.accordion');
+
+    const inputValue = input.value;
+
+    if (input.checkValidity() === false) {
+        alert.style.display ='block';
+        input.style.borderColor = 'red';
+    } else {
+        const newLists = document.querySelector('.new-lists');
+        newLists.innerHTML += `<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>${inputValue}</div>`
+        panel.style.maxHeight = panel.scrollHeight + "px";
+        alert.style.display = 'none';
+        closeOverlay()
+    } 
 }
 
 function setActiveButton(button) {
@@ -138,6 +237,7 @@ function homeButtonClick() {
 
 function initializeSidebar() {
     createSidebar();
+    newListPopup();
 
     const toggleButton = document.getElementById('toggle-sidebar');
     toggleButton.addEventListener('click', sidebarAnimate);
