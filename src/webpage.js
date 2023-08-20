@@ -1,4 +1,3 @@
-import './style.css'
 import initializeSidebar from './sidebar'
 
 function createNav() {
@@ -10,6 +9,9 @@ function createNav() {
 
     const leftDiv = document.createElement('div');
     leftDiv.classList.add('left-nav');
+
+    const centerDiv = document.createElement('div');
+    centerDiv.classList.add('center-nav');
 
     const rightDiv = document.createElement('div');
     rightDiv.classList.add('right-nav');
@@ -28,6 +30,12 @@ function createNav() {
     leftDiv.appendChild(menuIcon);
     leftDiv.appendChild(homeIcon);
 
+    const date = document.createElement('input');
+    date.setAttribute('type', 'date');
+    date.setAttribute('id', 'dateInput');
+
+    centerDiv.appendChild(date)
+
     const addIcon = document.createElement('i');
     addIcon.classList.add('fa-solid', 'fa-plus');
 
@@ -41,6 +49,7 @@ function createNav() {
     rightDiv.appendChild(logoDiv);
 
     navInner.appendChild(leftDiv);
+    navInner.appendChild(centerDiv);
     navInner.appendChild(rightDiv);
 
     nav.appendChild(navInner);
@@ -53,15 +62,19 @@ function createMain() {
     main.classList.add('main');
     main.setAttribute('id', 'main');
 
-    
+
     return main
 }
 
 function createWebpage() {
     const mainContent = document.getElementById("content");
-    
+
     mainContent.appendChild(createNav());
     mainContent.appendChild(createMain());
+
+    var currentDate = new Date();
+    var formattedDate = currentDate.toISOString().split('T')[0];
+    document.getElementById("dateInput").value = formattedDate;
 
     initializeSidebar()
 }
