@@ -131,7 +131,7 @@ body {
     grid-area: main;
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 280px 1fr;
     grid-template-areas:
         'sidebar main-area';
 }
@@ -139,8 +139,8 @@ body {
 .sidebar {
     background-color: #a3b18a;
     grid-area: sidebar;
-    padding: 2.5rem 0rem;
-    padding-left: 3rem;
+    padding: 1rem 0rem;
+    padding-left: 1rem;
     padding-right: 1rem;
     position: relative;
     transition: 0.3s ease;
@@ -417,11 +417,10 @@ body {
     #dateInput {
         display: none;
     }
-}
+} 
 
-@media (max-width: 300px) {
+@media (max-width: 280px) {
     .main {
         grid-template-columns: 100% 1fr;
-
     }
-}
+} 

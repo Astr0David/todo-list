@@ -118,7 +118,7 @@ function newListPopup() {
     const input = document.createElement('input');
     input.setAttribute('id', 'newlistinput');
     input.setAttribute('type', 'text');
-    input.setAttribute('maxlength', '15');
+    input.setAttribute('maxlength', '12');
     input.setAttribute('required', true);
 
     const alertParagraph = document.createElement('p');
