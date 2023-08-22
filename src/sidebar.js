@@ -1,3 +1,5 @@
+import { TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from "./app.js"
+
 function createSidebar() {
     const sidebar = document.createElement('div');
     sidebar.classList.add('sidebar');
@@ -113,12 +115,12 @@ function newListPopup() {
     popupMid.classList.add('popup-mid');
 
     const inputParagraph = document.createElement('p');
-    inputParagraph.textContent = 'Name (max 15 characters):';
+    inputParagraph.textContent = 'Name (max 10 characters):';
 
     const input = document.createElement('input');
     input.setAttribute('id', 'newlistinput');
     input.setAttribute('type', 'text');
-    input.setAttribute('maxlength', '12');
+    input.setAttribute('maxlength', '10');
     input.setAttribute('required', true);
 
     const alertParagraph = document.createElement('p');
@@ -158,6 +160,55 @@ function newListPopup() {
     mainContent.appendChild(overlay);
 }
 
+function deleteListPopup(confirmCallback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay2';
+
+    const popup = document.createElement('div');
+    popup.className = 'popup2';
+
+    const popupTop = document.createElement('div');
+    popupTop.className = 'popup-top2';
+
+    const triangleIcon = document.createElement('i');
+    triangleIcon.className = 'fa-solid fa-triangle-exclamation';
+
+    const popupMessage = document.createElement('p');
+    popupMessage.textContent = 'Are you sure you want to delete this list?';
+
+    const popupBot = document.createElement('div');
+    popupBot.className = 'popup-bot2';
+
+    const closeButton = document.createElement('button');
+    closeButton.id = 'close';
+    closeButton.textContent = 'Close';
+    closeButton.addEventListener('click', function () {
+        closeOverlay2()
+    });
+
+    const confirmButton = document.createElement('button');
+    confirmButton.id = 'deletelist';
+    confirmButton.textContent = 'Confirm';
+    confirmButton.addEventListener('click', () => {
+        confirmCallback(); 
+        closeOverlay2();
+    });
+
+    popupTop.appendChild(triangleIcon);
+    popupTop.appendChild(popupMessage);
+
+    popupBot.appendChild(closeButton);
+    popupBot.appendChild(confirmButton);
+
+    popup.appendChild(popupTop);
+    popup.appendChild(popupBot);
+
+    overlay.appendChild(popup);
+
+    const mainContent = document.getElementById('content');
+    mainContent.appendChild(overlay);
+}
+
 function newListButton() {
     const overlay = document.querySelector('.overlay');
     overlay.style.display = 'flex'
@@ -166,6 +217,79 @@ function newListButton() {
 function closeOverlay() {
     const overlay = document.querySelector('.overlay');
     overlay.style.display = 'none'
+}
+
+function deleteList(id) {
+    const todoLists = getTodoLists();
+    const usedIds = getUsedIds(); 
+
+    const idIndex = usedIds.indexOf(id);
+    if (idIndex !== -1) {
+        usedIds.splice(idIndex, 1);
+        saveUsedIds(usedIds); 
+    }
+
+    const updatedTodoLists = todoLists.filter(list => list.id !== id);
+    saveTodoLists(updatedTodoLists);
+
+    renderTodoLists();
+}
+
+function closeOverlay2() {
+    const overlay = document.querySelector('.overlay2');
+    overlay.remove()
+}
+
+function newListItem(name, id) {
+    const newListItem = document.createElement('div');
+    newListItem.classList.add('nav-buttons', 'the-new-lists');
+
+    const newListItemChild = document.createElement('div');
+    newListItemChild.innerHTML = `<i class="fa-solid fa-circle"></i>${name}</div>`;
+
+    const newListItemChild2 = document.createElement('div');
+    newListItemChild2.classList.add('trash');
+    const theTrashIcon = document.createElement('i');
+    theTrashIcon.classList.add('fa-regular','fa-trash-can');
+    theTrashIcon.setAttribute("data-list-id", id);
+    newListItemChild2.appendChild(theTrashIcon);
+
+    newListItem.appendChild(newListItemChild);
+    newListItem.appendChild(newListItemChild2);
+
+    return newListItem
+}
+
+function renderTodoLists() {
+    const todoLists = getTodoLists();
+    const newLists = document.querySelector('.new-lists');
+    
+    newLists.innerHTML = '';
+
+    todoLists.forEach(todoList => {
+        const listItem = newListItem(todoList.name, todoList.id); 
+        newLists.appendChild(listItem);
+    });
+
+    const generatedDivs = document.getElementsByClassName("the-new-lists");
+    for (const div of generatedDivs) {
+         const trashIcon = div.querySelector(".trash .fa-trash-can"); 
+        div.addEventListener("mouseenter", () => {
+            trashIcon.style.display = "block";
+        });
+
+        div.addEventListener("mouseleave", () => {
+            trashIcon.style.display = "none";
+        });
+    }
+
+    const generatedBins = document.getElementsByClassName('fa-trash-can');
+    for (const bin of generatedBins) {
+        bin.addEventListener('click', function() {
+            const listId = bin.getAttribute('data-list-id');
+            deleteListPopup(() => deleteList(listId));
+        });
+    }
 }
 
 function addNewList() {
@@ -179,11 +303,24 @@ function addNewList() {
         alert.style.display = 'block';
         input.style.borderColor = 'red';
     } else {
+        const newList = new TodoList(inputValue);
+
+        const todoLists = getTodoLists();
+        todoLists.push(newList);
+        saveTodoLists(todoLists);
+
+        logTodoListsToConsole()
+
         const newLists = document.querySelector('.new-lists');
-        newLists.innerHTML += `<div class = "nav-buttons"><i class="fa-solid fa-circle"></i>${inputValue}</div>`
+        newLists.appendChild(newListItem(inputValue, newList.id));
         input.value = '';
+
+        renderTodoLists()
+
         panel.style.maxHeight = panel.scrollHeight + "px";
         alert.style.display = 'none';
+
+        
         closeOverlay()
     }
 }
@@ -235,7 +372,7 @@ function homeButtonClick() {
     setActiveButton(today)
 }
 
-function initializeSidebar() {
+export default function initializeSidebar() {
     createSidebar();
     newListPopup();
 
@@ -246,6 +383,6 @@ function initializeSidebar() {
     homeButton.addEventListener('click', homeButtonClick)
 
     setActiveButton(document.querySelector(".today"));
-}
 
-export default initializeSidebar;
+    renderTodoLists()
+}

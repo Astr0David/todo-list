@@ -66,7 +66,7 @@ function createMain() {
     return main
 }
 
-function createWebpage() {
+export default function createWebpage() {
     const mainContent = document.getElementById("content");
 
     mainContent.appendChild(createNav());
@@ -79,4 +79,4 @@ function createWebpage() {
     initializeSidebar()
 }
 
-export default createWebpage;
+
