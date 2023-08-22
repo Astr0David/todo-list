@@ -126,7 +126,7 @@ body {
     border-radius: 4px;
     padding: 0.4rem 1rem;
     text-align: center;
-  }
+}
 
 .main {
     grid-area: main;
@@ -262,7 +262,7 @@ body {
 }
 
 .overlay {
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 500;
@@ -281,7 +281,7 @@ body {
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
     margin: 1rem;
     z-index: 1000;
-    position:fixed;
+    position: fixed;
 }
 
 .popup .fa-xmark {
@@ -298,7 +298,7 @@ body {
     transform: scale(1.2);
 }
 
-.popup .fa-xmark:active{
+.popup .fa-xmark:active {
     transform: scale(1);
 }
 
@@ -422,27 +422,6 @@ body {
     transform: scale(1.05);
 }
 
-
-@media (max-width: 600px) {
-    .popup {
-        max-width: 90%; 
-    }
-
-    #dateInput {
-        display: none;
-    }
-
-    .popup2 {
-        max-width: 90%; 
-    }
-} 
-
-@media (max-width: 280px) {
-    .main {
-        grid-template-columns: 100% 1fr;
-    }
-} 
-
 .overlay2 {
     display: flex;
     align-items: center;
@@ -526,7 +505,7 @@ body {
 
 .popup2 .popup-bot2 #deletelist {
     font-size: 1.1rem;
-    padding: .5rem ;
+    padding: .5rem;
     border-radius: 4px;
     outline: none;
     border: 1px solid transparent;
@@ -541,4 +520,24 @@ body {
 
 .popup2 .popup-bot2 #deletelist:active {
     transform: scale(1);
+}
+
+@media (max-width: 600px) {
+    .popup {
+        max-width: 90%;
+    }
+
+    #dateInput {
+        display: none;
+    }
+
+    .popup2 {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 280px) {
+    .main {
+        grid-template-columns: 100% 1fr;
+    }
 }

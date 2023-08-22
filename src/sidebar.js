@@ -58,7 +58,9 @@ function createSidebar() {
     const createNew = document.createElement('div');
     createNew.classList.add('create-new');
     createNew.innerHTML = '<i class="fa-solid fa-plus"></i> New List'
-    createNew.addEventListener('click', newListButton);
+    createNew.addEventListener('click', function () {
+        newListPopup();
+    });
 
     accordion.appendChild(newLists);
     accordion.appendChild(createNew);
@@ -190,7 +192,7 @@ function deleteListPopup(confirmCallback) {
     confirmButton.id = 'deletelist';
     confirmButton.textContent = 'Confirm';
     confirmButton.addEventListener('click', () => {
-        confirmCallback(); 
+        confirmCallback();
         closeOverlay2();
     });
 
@@ -209,24 +211,19 @@ function deleteListPopup(confirmCallback) {
     mainContent.appendChild(overlay);
 }
 
-function newListButton() {
-    const overlay = document.querySelector('.overlay');
-    overlay.style.display = 'flex'
-}
-
 function closeOverlay() {
     const overlay = document.querySelector('.overlay');
-    overlay.style.display = 'none'
+    overlay.remove()
 }
 
 function deleteList(id) {
     const todoLists = getTodoLists();
-    const usedIds = getUsedIds(); 
+    const usedIds = getUsedIds();
 
     const idIndex = usedIds.indexOf(id);
     if (idIndex !== -1) {
         usedIds.splice(idIndex, 1);
-        saveUsedIds(usedIds); 
+        saveUsedIds(usedIds);
     }
 
     const updatedTodoLists = todoLists.filter(list => list.id !== id);
@@ -250,7 +247,7 @@ function newListItem(name, id) {
     const newListItemChild2 = document.createElement('div');
     newListItemChild2.classList.add('trash');
     const theTrashIcon = document.createElement('i');
-    theTrashIcon.classList.add('fa-regular','fa-trash-can');
+    theTrashIcon.classList.add('fa-regular', 'fa-trash-can');
     theTrashIcon.setAttribute("data-list-id", id);
     newListItemChild2.appendChild(theTrashIcon);
 
@@ -263,17 +260,17 @@ function newListItem(name, id) {
 function renderTodoLists() {
     const todoLists = getTodoLists();
     const newLists = document.querySelector('.new-lists');
-    
+
     newLists.innerHTML = '';
 
     todoLists.forEach(todoList => {
-        const listItem = newListItem(todoList.name, todoList.id); 
+        const listItem = newListItem(todoList.name, todoList.id);
         newLists.appendChild(listItem);
     });
 
     const generatedDivs = document.getElementsByClassName("the-new-lists");
     for (const div of generatedDivs) {
-         const trashIcon = div.querySelector(".trash .fa-trash-can"); 
+        const trashIcon = div.querySelector(".trash .fa-trash-can");
         div.addEventListener("mouseenter", () => {
             trashIcon.style.display = "block";
         });
@@ -285,7 +282,7 @@ function renderTodoLists() {
 
     const generatedBins = document.getElementsByClassName('fa-trash-can');
     for (const bin of generatedBins) {
-        bin.addEventListener('click', function() {
+        bin.addEventListener('click', function () {
             const listId = bin.getAttribute('data-list-id');
             deleteListPopup(() => deleteList(listId));
         });
@@ -320,7 +317,7 @@ function addNewList() {
         panel.style.maxHeight = panel.scrollHeight + "px";
         alert.style.display = 'none';
 
-        
+
         closeOverlay()
     }
 }
@@ -374,7 +371,6 @@ function homeButtonClick() {
 
 export default function initializeSidebar() {
     createSidebar();
-    newListPopup();
 
     const toggleButton = document.getElementById('toggle-sidebar');
     toggleButton.addEventListener('click', sidebarAnimate);

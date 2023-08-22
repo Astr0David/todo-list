@@ -33,7 +33,7 @@ function generateRandomId() {
 }
 
 export function uniqueId() {
-    const usedIds = getUsedIds(); 
+    const usedIds = getUsedIds();
 
     if (usedIds.length >= 1000000) {
         throw new Error("All possible IDs have been used.");
@@ -45,7 +45,7 @@ export function uniqueId() {
     } while (usedIds.includes(newId));
 
     usedIds.push(newId);
-    saveUsedIds(usedIds); 
+    saveUsedIds(usedIds);
     console.log(usedIds);
     return newId;
 }
