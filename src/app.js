@@ -9,9 +9,9 @@ export class Todo {
 }
 
 export class TodoList {
-    constructor(name) {
+    constructor(name, id = null) {
         this.name = name;
-        this.id = uniqueId();
+        this.id = id || uniqueId();
         this.todos = [];
     }
 

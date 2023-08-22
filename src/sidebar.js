@@ -1,4 +1,6 @@
 import { TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from "./app.js"
+import initialiseMain from "./main.js"
+
 
 function createSidebar() {
     const sidebar = document.createElement('div');
@@ -14,6 +16,7 @@ function createSidebar() {
     inbox.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(inbox);
+        initialiseMain('000000');
     });
 
     const today = createSidebarItem('today', 'fa-calendar-day', 'Today');
@@ -263,7 +266,9 @@ function renderTodoLists() {
 
     newLists.innerHTML = '';
 
-    todoLists.forEach(todoList => {
+    const nonDefaultTodoLists = todoLists.filter(todoList => !isDefaultTodoList(todoList.id));
+
+    nonDefaultTodoLists.forEach(todoList => {
         const listItem = newListItem(todoList.name, todoList.id);
         newLists.appendChild(listItem);
     });
@@ -287,6 +292,12 @@ function renderTodoLists() {
             deleteListPopup(() => deleteList(listId));
         });
     }
+}
+
+function isDefaultTodoList(id) {
+    const defaultTodoListIds = ["000000", "111111", "222222", "333333", "444444"];
+
+    return defaultTodoListIds.includes(id);
 }
 
 function addNewList() {
@@ -378,7 +389,8 @@ export default function initializeSidebar() {
     const homeButton = document.getElementById('toggle-home');
     homeButton.addEventListener('click', homeButtonClick)
 
-    setActiveButton(document.querySelector(".today"));
+    setActiveButton(document.querySelector(".inbox"));
+    initialiseMain('000000')
 
     renderTodoLists()
 }

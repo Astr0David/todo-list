@@ -1,4 +1,5 @@
 import initializeSidebar from './sidebar'
+import { TodoList,getTodoLists,saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from './app.js'
 
 function createNav() {
     const nav = document.createElement('div');
@@ -66,6 +67,32 @@ function createMain() {
     return main
 }
 
+function createDefaultTodoLists() {
+    const defaultListsData = [
+        { name: "Inbox", id: "000000" },
+        { name: "Today", id: "111111" },
+        { name: "Upcoming", id: "222222" },
+        { name: "All", id: "333333" },
+        { name: "Important", id: "444444" }
+    ];
+
+    const existingLists = getTodoLists();
+    const missingListsData = defaultListsData.filter(defaultList => 
+        !existingLists.some(existingList => existingList.name === defaultList.name)
+    );
+
+    const updatedLists = existingLists.concat(missingListsData.map(data => new TodoList(data.name, data.id)));
+    saveTodoLists(updatedLists);
+
+    updateUsedIds(defaultListsData.map(list => list.id));
+}
+
+function updateUsedIds(idsToInclude) {
+    const usedIds = getUsedIds();
+    const uniqueUsedIds = Array.from(new Set(usedIds.concat(idsToInclude)));
+    saveUsedIds(uniqueUsedIds);
+}
+
 export default function createWebpage() {
     const mainContent = document.getElementById("content");
 
@@ -75,6 +102,8 @@ export default function createWebpage() {
     var currentDate = new Date();
     var formattedDate = currentDate.toISOString().split('T')[0];
     document.getElementById("dateInput").value = formattedDate;
+
+    createDefaultTodoLists();
 
     initializeSidebar()
 }
