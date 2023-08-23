@@ -1,5 +1,5 @@
 import initializeSidebar from './sidebar'
-import { TodoList,getTodoLists,saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from './app.js'
+import { Todo, TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds, getTodoListById} from './app.js'
 
 function createNav() {
     const nav = document.createElement('div');
@@ -39,6 +39,11 @@ function createNav() {
 
     const addIcon = document.createElement('i');
     addIcon.classList.add('fa-solid', 'fa-plus');
+    addIcon.addEventListener('click', function () {
+        newTaskPopup();
+        const todoLists = getTodoLists();
+        createListOptions(todoLists);
+    })
 
     const title = document.createElement('h1');
     title.textContent = 'ToDo';
@@ -67,6 +72,253 @@ function createMain() {
     return main
 }
 
+function newTaskPopup() {
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay3';
+
+    const popup = document.createElement('div');
+    popup.className = 'popup3';
+
+    const popupTop = document.createElement('div');
+    popupTop.className = 'popup-top3';
+
+    const titleText = document.createElement('p');
+    titleText.textContent = 'New Task';
+    popupTop.appendChild(titleText);
+
+    const closeButton = document.createElement('i');
+    closeButton.className = 'fa-solid fa-xmark';
+    closeButton.addEventListener('click', closeOverlay);
+    popupTop.appendChild(closeButton);
+
+    popup.appendChild(popupTop);
+
+    const popupMid = document.createElement('div');
+    popupMid.className = 'popup-mid3';
+
+    const midLeft = document.createElement('div');
+    midLeft.className = 'mid-left';
+
+    const titleLabel = document.createElement('label');
+    titleLabel.textContent = 'Title:';
+    midLeft.appendChild(titleLabel);
+
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.maxLength = 50;
+    titleInput.id = 'task-title';
+    titleInput.required = true;
+    midLeft.appendChild(titleInput);
+
+    const titleAlert = document.createElement('p');
+    titleAlert.classList.add('title-alert');
+    titleAlert.textContent = 'Title is required.';
+    titleAlert.style.color = 'red';
+    titleAlert.style.marginTop = '';
+    titleAlert.style.display = 'none';
+    midLeft.appendChild(titleAlert)
+
+    const descriptionLabel = document.createElement('label');
+    descriptionLabel.textContent = 'Description:';
+    midLeft.appendChild(descriptionLabel);
+
+    const descriptionTextarea = document.createElement('textarea');
+    descriptionTextarea.id = 'description';
+    descriptionTextarea.cols = 30;
+    descriptionTextarea.rows = 4;
+    descriptionTextarea.maxLength = 180;
+    midLeft.appendChild(descriptionTextarea);
+
+    popupMid.appendChild(midLeft);
+
+    const midRight = document.createElement('div');
+    midRight.className = 'mid-right';
+
+    const dateLabel = document.createElement('label');
+    dateLabel.textContent = 'Due date:';
+    midRight.appendChild(dateLabel);
+
+    const dateInput = document.createElement('input');
+    dateInput.type = 'date';
+    dateInput.id = 'task-date';
+    dateInput.required = true;
+    midRight.appendChild(dateInput);
+
+    const dateAlert = document.createElement('p');
+    dateAlert.classList.add('date-alert');
+    dateAlert.textContent = 'Date is required.';
+    dateAlert.style.color = 'red';
+    dateAlert.style.marginTop = '';
+    dateAlert.style.display = 'none';
+
+    midRight.appendChild(dateAlert);
+
+    const priorityLabel = document.createElement('label');
+    priorityLabel.textContent = 'Priority:';
+    midRight.appendChild(priorityLabel);
+
+    const prioritySelect = document.createElement('select');
+    prioritySelect.id = 'priority';
+    prioritySelect.required = true;
+    ['Low', 'Medium', 'High'].forEach(priorityText => {
+        const option = document.createElement('option');
+        option.value = priorityText.toLowerCase();
+        option.textContent = priorityText;
+        prioritySelect.appendChild(option);
+    });
+    midRight.appendChild(prioritySelect);
+
+    const priorityAlert = document.createElement('p');
+    priorityAlert.classList.add('priority-alert');
+    priorityAlert.textContent = 'Priority is required.';
+    priorityAlert.style.color = 'red';
+    priorityAlert.style.marginTop = '';
+    priorityAlert.style.display = 'none';
+
+    midRight.appendChild(priorityAlert);
+
+    const listLabel = document.createElement('label');
+    listLabel.textContent = 'List:';
+    midRight.appendChild(listLabel);
+
+    const listSelect = document.createElement('select');
+    listSelect.id = 'thelist';
+    listSelect.required = true;
+
+    midRight.appendChild(listSelect);
+
+    const listAlert = document.createElement('p');
+    listAlert.classList.add('list-alert');
+    listAlert.textContent = 'List is required.';
+    listAlert.style.color = 'red';
+    listAlert.style.marginTop = '';
+    listAlert.style.display = 'none';
+
+    midRight.appendChild(listAlert);
+
+    popupMid.appendChild(midRight);
+
+    popup.appendChild(popupMid);
+
+    const popupBot = document.createElement('div');
+    popupBot.className = 'popup-bot3';
+
+    const textCloseButton = document.createElement('button');
+    textCloseButton.id = 'close';
+    textCloseButton.textContent = 'Close';
+    textCloseButton.addEventListener('click', closeOverlay);
+    popupBot.appendChild(textCloseButton);
+
+    const addTaskButton = document.createElement('button');
+    addTaskButton.id = 'addtask';
+    addTaskButton.textContent = 'Add Task';
+    addTaskButton.addEventListener('click', validateAndAddTask)
+    popupBot.appendChild(addTaskButton);
+
+    popup.appendChild(popupBot);
+
+    overlay.appendChild(popup);
+
+    const mainContent = document.getElementById('content');
+    mainContent.appendChild(overlay);
+}
+
+function closeOverlay() {
+    const overlay = document.querySelector('.overlay3');
+    overlay.remove()
+}
+
+function createListOptions(todoLists) {
+    const listSelect = document.getElementById('thelist');
+
+    listSelect.innerHTML = '';
+    const ignoreIds = ['111111', '222222', '333333', '444444']
+
+
+    todoLists.forEach(list => {
+        if (!ignoreIds.includes(list.id)) {
+            const listOption = document.createElement('option');
+            listOption.value = list.id;
+            listOption.textContent = list.name;
+            listSelect.appendChild(listOption);
+        }
+    });
+}
+
+function validateAndAddTask() {
+    const titleInput = document.getElementById('task-title');
+    const dateInput = document.getElementById('task-date');
+    const prioritySelect = document.getElementById('priority');
+    const listSelect = document.getElementById('thelist');
+
+    const titleAlert = document.querySelector('.title-alert');
+    const dateAlert = document.querySelector('.date-alert');
+    const priorityAlert = document.querySelector('.priority-alert');
+    const listAlert = document.querySelector('.list-alert');
+
+    let isValid = true;
+
+    if (titleInput.value === '') {
+        titleAlert.style.display = 'block';
+        isValid = false;
+    } else {
+        titleAlert.style.display = 'none';
+    }
+
+    if (dateInput.value === '') {
+        dateAlert.style.display = 'block';
+        isValid = false;
+    } else {
+        dateAlert.style.display = 'none';
+    }
+
+    if (prioritySelect.value === '') {
+        priorityAlert.style.display = 'block';
+        isValid = false;
+    } else {
+        priorityAlert.style.display = 'none';
+    }
+
+    if (listSelect.value === '') {
+        listAlert.style.display = 'block';
+        isValid = false;
+    } else {
+        listAlert.style.display = 'none';
+    }
+
+    if (isValid) {
+        const selectedValue = listSelect.value;
+        const description = document.getElementById('description');
+
+        const theTodo = new Todo(titleInput.value, description.value, dateInput.value, prioritySelect.value)
+        addTodoToTodoList(selectedValue, theTodo);
+        logTodoListsToConsole()
+        closeOverlay()
+    }
+}
+
+function addTodoToTodoList(selectedValue, newTodo) {
+    const originalTodoList = getTodoListById(selectedValue);
+    
+    if (!originalTodoList) {
+        console.log("TodoList not found for the selected value.");
+        return;
+    }
+    
+    const updatedTodoList = new TodoList(originalTodoList.name, originalTodoList.id);
+    
+    updatedTodoList.todos = [...originalTodoList.todos, newTodo];
+
+    const todoLists = getTodoLists();
+    const updatedTodoLists = todoLists.map(todoList =>
+        todoList.id === selectedValue ? updatedTodoList : todoList
+    );
+    
+    localStorage.setItem('todoLists', JSON.stringify(updatedTodoLists));
+    
+    logTodoListsToConsole();
+}
+
 function createDefaultTodoLists() {
     const defaultListsData = [
         { name: "Inbox", id: "000000" },
@@ -77,7 +329,7 @@ function createDefaultTodoLists() {
     ];
 
     const existingLists = getTodoLists();
-    const missingListsData = defaultListsData.filter(defaultList => 
+    const missingListsData = defaultListsData.filter(defaultList =>
         !existingLists.some(existingList => existingList.name === defaultList.name)
     );
 
@@ -85,6 +337,40 @@ function createDefaultTodoLists() {
     saveTodoLists(updatedLists);
 
     updateUsedIds(defaultListsData.map(list => list.id));
+}
+
+function renderTodoLists() {
+    const todoLists = getTodoLists();
+    const newLists = document.querySelector('.new-lists');
+
+    newLists.innerHTML = '';
+
+    const nonDefaultTodoLists = todoLists.filter(todoList => !isDefaultTodoList(todoList.id));
+
+    nonDefaultTodoLists.forEach(todoList => {
+        const listItem = newListItem(todoList.name, todoList.id);
+        newLists.appendChild(listItem);
+    });
+
+    const generatedDivs = document.getElementsByClassName("the-new-lists");
+    for (const div of generatedDivs) {
+        const trashIcon = div.querySelector(".trash .fa-trash-can");
+        div.addEventListener("mouseenter", () => {
+            trashIcon.style.display = "block";
+        });
+
+        div.addEventListener("mouseleave", () => {
+            trashIcon.style.display = "none";
+        });
+    }
+
+    const generatedBins = document.getElementsByClassName('fa-trash-can');
+    for (const bin of generatedBins) {
+        bin.addEventListener('click', function () {
+            const listId = bin.getAttribute('data-list-id');
+            deleteListPopup(() => deleteList(listId));
+        });
+    }
 }
 
 function updateUsedIds(idsToInclude) {

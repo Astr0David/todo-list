@@ -1,7 +1,6 @@
 import { TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from "./app.js"
 import initialiseMain from "./main.js"
 
-
 function createSidebar() {
     const sidebar = document.createElement('div');
     sidebar.classList.add('sidebar');
@@ -312,7 +311,6 @@ function addNewList() {
         input.style.borderColor = 'red';
     } else {
         const newList = new TodoList(inputValue);
-
         const todoLists = getTodoLists();
         todoLists.push(newList);
         saveTodoLists(todoLists);
@@ -362,13 +360,18 @@ function listClick() {
 function sidebarAnimate() {
     const sidebar = document.querySelector('.sidebar');
     const button = document.getElementById('toggle-sidebar');
+    const main = document.querySelector('.main');
 
     if (sidebar.style.left === '' || sidebar.style.left === '0px') {
+        sidebar.style.position = 'fixed';
         sidebar.style.left = '-100%';
+        main.style.gridTemplateAreas = '"main-area main-area"'
         button.classList.remove('fa-bars-staggered');
         button.classList.add('fa-bars');
     } else if (sidebar.style.left === '-100%') {
         sidebar.style.left = '0';
+        sidebar.style.position = 'relative';
+        main.style.gridTemplateAreas = '"sidebar main-area"'
         button.classList.remove('fa-bars');
         button.classList.add('fa-bars-staggered');
     }

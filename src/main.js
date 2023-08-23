@@ -1,4 +1,4 @@
-import { TodoList, Todo, saveTodoLists, getTodoLists } from "./app";
+import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById } from "./app";
 
 function createMain(id) {
     const main = document.createElement('div');
@@ -30,10 +30,7 @@ function createMain(id) {
     parent.appendChild(main);
 }
 
-function getTodoListById(id) {
-    const todoLists = getTodoLists();
-    return todoLists.find(todoList => todoList.id === id);
-}
+
 
 export default function initialiseMain(id) {
     createMain(id);

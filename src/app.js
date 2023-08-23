@@ -1,5 +1,5 @@
 export class Todo {
-    constructor(id, title, description, dueDate, priority) {
+    constructor(title, description, dueDate, priority) {
         this.id = uniqueId();
         this.title = title;
         this.description = description;
@@ -62,6 +62,11 @@ export function saveUsedIds(usedIds) {
 export function getTodoLists() {
     const todoListsJSON = localStorage.getItem('todoLists');
     return todoListsJSON ? JSON.parse(todoListsJSON) : [];
+}
+
+export function getTodoListById(id) {
+    const todoLists = getTodoLists();
+    return todoLists.find(todoList => todoList.id === id);
 }
 
 export function saveTodoLists(todoLists) {
