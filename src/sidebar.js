@@ -1,5 +1,5 @@
 import { TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from "./app.js"
-import initialiseMain from "./main.js"
+import initialiseMain, { renderTasks } from "./main.js"
 
 function createSidebar() {
     const sidebar = document.createElement('div');
@@ -12,10 +12,11 @@ function createSidebar() {
     menu.classList.add('menu');
 
     const inbox = createSidebarItem('inbox', 'fa-inbox', 'Inbox');
+    inbox.setAttribute('data-list-id', '000000')
     inbox.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(inbox);
-        initialiseMain('000000');
+        initialiseMain(inbox.getAttribute('data-list-id'));
     });
 
     const today = createSidebarItem('today', 'fa-calendar-day', 'Today');
@@ -242,6 +243,7 @@ function closeOverlay2() {
 function newListItem(name, id) {
     const newListItem = document.createElement('div');
     newListItem.classList.add('nav-buttons', 'the-new-lists');
+    newListItem.setAttribute("data-list-id", id);
 
     const newListItemChild = document.createElement('div');
     newListItemChild.innerHTML = `<i class="fa-solid fa-circle"></i>${name}</div>`;
@@ -358,22 +360,37 @@ function listClick() {
 }
 
 function sidebarAnimate() {
+    const screenWidth = window.innerWidth;
     const sidebar = document.querySelector('.sidebar');
     const button = document.getElementById('toggle-sidebar');
     const main = document.querySelector('.main');
-
-    if (sidebar.style.left === '' || sidebar.style.left === '0px') {
-        sidebar.style.position = 'fixed';
-        sidebar.style.left = '-100%';
-        main.style.gridTemplateAreas = '"main-area main-area"'
-        button.classList.remove('fa-bars-staggered');
-        button.classList.add('fa-bars');
-    } else if (sidebar.style.left === '-100%') {
-        sidebar.style.left = '0';
-        sidebar.style.position = 'relative';
-        main.style.gridTemplateAreas = '"sidebar main-area"'
-        button.classList.remove('fa-bars');
-        button.classList.add('fa-bars-staggered');
+    
+    if (screenWidth > 768) {
+        if (sidebar.style.left === '' || sidebar.style.left === '0px') {
+            sidebar.style.position = 'fixed';
+            sidebar.style.left = '-100%';
+            main.style.gridTemplateColumns = '1fr'
+            main.style.gridTemplateAreas = '"main-area"'
+            button.classList.remove('fa-bars-staggered');
+            button.classList.add('fa-bars');
+        } else if (sidebar.style.left === '-100%') {
+            sidebar.style.left = '0';
+            sidebar.style.position = 'relative';
+            main.style.gridTemplateColumns = '300px 1fr'
+            main.style.gridTemplateAreas = '"sidebar main-area"'
+            button.classList.remove('fa-bars');
+            button.classList.add('fa-bars-staggered');
+        }
+    } else {
+        if (sidebar.style.left === '-100%') {
+            sidebar.style.left = '0';
+            button.classList.remove('fa-bars');
+            button.classList.add('fa-bars-staggered');
+        } else if (sidebar.style.left === '' || sidebar.style.left === '0px') {
+            sidebar.style.left = '-100%';
+            button.classList.remove('fa-bars-staggered');
+            button.classList.add('fa-bars');
+        }
     }
 }
 
@@ -396,4 +413,5 @@ export default function initializeSidebar() {
     initialiseMain('000000')
 
     renderTodoLists()
+    renderTasks()
 }

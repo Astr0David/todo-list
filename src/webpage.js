@@ -1,5 +1,6 @@
 import initializeSidebar from './sidebar'
-import { Todo, TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds, getTodoListById} from './app.js'
+import { renderTasks } from './main'
+import { Todo, TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds, getTodoListById } from './app.js'
 
 function createNav() {
     const nav = document.createElement('div');
@@ -21,7 +22,13 @@ function createNav() {
     logoDiv.classList.add('logo');
 
     const menuIcon = document.createElement('i');
-    menuIcon.classList.add('fa-solid', 'fa-bars-staggered');
+    const screenWidth = window.innerWidth;
+    if (screenWidth > 768) {
+        menuIcon.classList.add('fa-solid', 'fa-bars-staggered');
+    } else {
+        menuIcon.classList.add('fa-solid', 'fa-bars');
+    }
+
     menuIcon.setAttribute('id', 'toggle-sidebar');
 
     const homeIcon = document.createElement('i');
@@ -105,7 +112,7 @@ function newTaskPopup() {
 
     const titleInput = document.createElement('input');
     titleInput.type = 'text';
-    titleInput.maxLength = 50;
+    titleInput.maxLength = 60;
     titleInput.id = 'task-title';
     titleInput.required = true;
     midLeft.appendChild(titleInput);
@@ -299,23 +306,24 @@ function validateAndAddTask() {
 
 function addTodoToTodoList(selectedValue, newTodo) {
     const originalTodoList = getTodoListById(selectedValue);
-    
+
     if (!originalTodoList) {
         console.log("TodoList not found for the selected value.");
         return;
     }
-    
+
     const updatedTodoList = new TodoList(originalTodoList.name, originalTodoList.id);
-    
+
     updatedTodoList.todos = [...originalTodoList.todos, newTodo];
 
     const todoLists = getTodoLists();
     const updatedTodoLists = todoLists.map(todoList =>
         todoList.id === selectedValue ? updatedTodoList : todoList
     );
-    
+
     localStorage.setItem('todoLists', JSON.stringify(updatedTodoLists));
-    
+
+    renderTasks()
     logTodoListsToConsole();
 }
 
@@ -339,44 +347,32 @@ function createDefaultTodoLists() {
     updateUsedIds(defaultListsData.map(list => list.id));
 }
 
-function renderTodoLists() {
-    const todoLists = getTodoLists();
-    const newLists = document.querySelector('.new-lists');
-
-    newLists.innerHTML = '';
-
-    const nonDefaultTodoLists = todoLists.filter(todoList => !isDefaultTodoList(todoList.id));
-
-    nonDefaultTodoLists.forEach(todoList => {
-        const listItem = newListItem(todoList.name, todoList.id);
-        newLists.appendChild(listItem);
-    });
-
-    const generatedDivs = document.getElementsByClassName("the-new-lists");
-    for (const div of generatedDivs) {
-        const trashIcon = div.querySelector(".trash .fa-trash-can");
-        div.addEventListener("mouseenter", () => {
-            trashIcon.style.display = "block";
-        });
-
-        div.addEventListener("mouseleave", () => {
-            trashIcon.style.display = "none";
-        });
-    }
-
-    const generatedBins = document.getElementsByClassName('fa-trash-can');
-    for (const bin of generatedBins) {
-        bin.addEventListener('click', function () {
-            const listId = bin.getAttribute('data-list-id');
-            deleteListPopup(() => deleteList(listId));
-        });
-    }
-}
-
 function updateUsedIds(idsToInclude) {
     const usedIds = getUsedIds();
     const uniqueUsedIds = Array.from(new Set(usedIds.concat(idsToInclude)));
     saveUsedIds(uniqueUsedIds);
+}
+
+function handleScreenWidthChange() {
+    const screenWidth = window.innerWidth;
+    const sidebar = document.querySelector('.sidebar');
+    const main = document.querySelector('.main');
+
+    if (screenWidth <= 768) {
+        if (screenWidth <= 300) {
+            sidebar.style.width = screenWidth;
+        }
+        sidebar.style.position = 'fixed';
+        sidebar.style.left = '-100%';
+        main.style.gridTemplateColumns = '1fr'
+        main.style.gridTemplateAreas = '"main-area"'
+    } else {
+        sidebar.style.left = '0';
+        sidebar.style.position = 'relative';
+        sidebar.style.width = '';
+        main.style.gridTemplateColumns = '300px 1fr'
+        main.style.gridTemplateAreas = '"sidebar main-area"'
+    }
 }
 
 export default function createWebpage() {
@@ -392,6 +388,10 @@ export default function createWebpage() {
     createDefaultTodoLists();
 
     initializeSidebar()
+
+    window.addEventListener('resize', handleScreenWidthChange);
+
+    handleScreenWidthChange();
 }
 
 
