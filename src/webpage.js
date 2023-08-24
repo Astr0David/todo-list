@@ -360,7 +360,9 @@ function handleScreenWidthChange() {
 
     if (screenWidth <= 768) {
         if (screenWidth <= 300) {
-            sidebar.style.width = screenWidth;
+            sidebar.style.width = screenWidth + 'px';
+        } else {
+            sidebar.style.width = '300px';
         }
         sidebar.style.position = 'fixed';
         sidebar.style.left = '-100%';

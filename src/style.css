@@ -948,7 +948,6 @@ body {
     .sidebar {
         position: fixed;
         left: -100%;
-        width: 300px;
     }
 
     .main {
