@@ -1,4 +1,4 @@
-import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById, findTodoById } from "./app";
+import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById, findTodoById, getUsedIds, saveUsedIds } from "./app";
 
 function createMain(id) {
     const mainArea = document.querySelector('.main-area');
@@ -507,12 +507,20 @@ function deleteTaskPopup(confirmCallback) {
 
 function deleteTask(todoId) {
     const todoLists = getTodoLists();
+    const usedIds = getUsedIds();
 
     for (const todoList of todoLists) {
         const todoIndex = todoList.todos.findIndex(todo => todo.id === todoId);
         if (todoIndex !== -1) {
             todoList.todos.splice(todoIndex, 1);
             saveTodoLists(todoLists);
+
+            const idIndex = usedIds.indexOf(todoId);
+            if (idIndex !== -1) {
+                usedIds.splice(idIndex, 1);
+                saveUsedIds(usedIds);
+            }
+
             renderTasks()
             return;
         }
