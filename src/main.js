@@ -106,8 +106,8 @@ export function renderTasks() {
     for (const bin of generatedBins) {
         bin.addEventListener('click', function (event) {
             event.stopPropagation()
-            const listId = bin.getAttribute('data-list-id');
-            deleteTaskPopup(() => deleteTask(listId));
+            const taskId = bin.getAttribute('data-list-id');
+            deleteTaskPopup(() => deleteTask(taskId));
         });
     }
 
@@ -159,6 +159,15 @@ export function renderTasks() {
             }
         });
     });
+
+    const checkboxes = document.querySelectorAll('.task-check')
+    for (const checkbox of checkboxes) {
+        checkbox.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const taskId = checkbox.getAttribute('data-list-id');
+            deleteTask(taskId)
+        })
+    }
 }
 
 function changePriority() {
@@ -180,10 +189,8 @@ function createTask(taskTitle, dueDate, description, priority, id) {
 
     const taskCheckbox = document.createElement("input");
     taskCheckbox.type = "checkbox";
-    taskCheckbox.addEventListener('click', (event) => {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-    })
+    taskCheckbox.classList.add('task-check');
+    taskCheckbox.setAttribute('data-list-id', id)
     taskLeft.appendChild(taskCheckbox);
 
     const taskTitleP = document.createElement("p");
