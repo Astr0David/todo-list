@@ -1,4 +1,4 @@
-import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById, findTodoById, logTodoListsToConsole} from "./app";
+import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById, findTodoById, logTodoListsToConsole } from "./app";
 
 function createMain(id) {
     const mainArea = document.querySelector('.main-area');
@@ -37,9 +37,6 @@ function createMain(id) {
 }
 
 export function renderTasks() {
-    const taskContainer = document.querySelector('.todo-section')
-    taskContainer.innerHTML = '';
-
     const navButtons = document.querySelectorAll('.nav-buttons');
     let activeNavButton = null;
 
@@ -52,15 +49,41 @@ export function renderTasks() {
 
     const dataListId = activeNavButton.getAttribute('data-list-id');
 
-    const todoList = getTodoListById(dataListId);
-    if (!todoList) {
-        console.error('Todo list not found');
-        return;
+    const taskContainer = document.querySelector('.todo-section');
+    taskContainer.innerHTML = '';
+
+    const todoLists = getTodoLists();
+    let todosToRender = [];
+
+    if (dataListId === '111111') {
+        const today = new Date().toISOString().substr(0, 10);
+        todosToRender = todoLists.flatMap(todoList =>
+            todoList.todos.filter(todo => todo.dueDate === today)
+        );
+    } else if (dataListId === '222222') {
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const nextWeekFormatted = nextWeek.toISOString().substr(0, 10);
+        todosToRender = todoLists.flatMap(todoList =>
+            todoList.todos.filter(
+                todo =>
+                    todo.dueDate <= nextWeekFormatted && todo.dueDate >= new Date().toISOString().substr(0, 10)
+            )
+        );
+    } else if (dataListId === '333333') {
+        todosToRender = todoLists.flatMap(todoList => todoList.todos);
+    } else if (dataListId === '444444') {
+        todosToRender = todoLists.flatMap(todoList =>
+            todoList.todos.filter(todo => todo.priority === 'high')
+        );
+    } else {
+        const selectedDataListId = activeNavButton.getAttribute('data-list-id');
+        todosToRender = getTodoListById(selectedDataListId)?.todos || [];
     }
 
-    todoList.todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+    todosToRender.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
-    todoList.todos.forEach(todo => {
+    todosToRender.forEach(todo => {
         createTask(todo.title, todo.dueDate, todo.description, todo.priority, todo.id);
     });
 
@@ -93,11 +116,53 @@ export function renderTasks() {
         editor.addEventListener('click', function (event) {
             event.stopPropagation()
             const todo = findTodoById(editor.getAttribute('data-list-id'));
-            editTaskPopup(todo.title,todo.description,todo.dueDate,todo.priority, todo.id, dataListId)
+            editTaskPopup(todo.title, todo.description, todo.dueDate, todo.priority, todo.id)
             const todoLists = getTodoLists();
-            createListOptions(todoLists);
+            createListOptions(todoLists, dataListId);
         })
     }
+
+    const priorityIcons = document.querySelectorAll('.task-priority');
+    priorityIcons.forEach(icon => {
+        icon.addEventListener('click', (event) => {
+            event.stopPropagation()
+            const todoId = icon.getAttribute('data-list-id');
+            const existingTodo = findTodoById(todoId)
+
+            const todoPriority = existingTodo.priority
+
+            let newPriority;
+            if (todoPriority === 'low') {
+                newPriority = 'medium';
+            } else if (todoPriority === 'medium') {
+                newPriority = 'high';
+            } else if (todoPriority === 'high') {
+                newPriority = 'low';
+            }
+
+            if (existingTodo) {
+                deleteTask(existingTodo.id)
+
+                const updatedTodo = new Todo(
+                    existingTodo.title,
+                    existingTodo.description,
+                    existingTodo.dueDate,
+                    newPriority,
+                    existingTodo.id
+                );
+
+                addTodoToTodoList(dataListId, updatedTodo);
+                saveTodoLists(getTodoLists());
+
+                logTodoListsToConsole();
+                renderTasks()
+            }
+        });
+    });
+}
+
+function changePriority() {
+
 }
 
 function createTask(taskTitle, dueDate, description, priority, id) {
@@ -138,18 +203,12 @@ function createTask(taskTitle, dueDate, description, priority, id) {
     taskRight.appendChild(editIcon);
 
     const priorityIcon = document.createElement("i");
-    priorityIcon.className = "fa-solid fa-flag task-icons";
+    priorityIcon.className = "fa-solid fa-flag task-icons task-priority";
     priorityIcon.setAttribute('data-list-id', id);
     priorityIcon.title = "Change priority";
     priorityIcon.style.color = (priority === 'high') ? 'red' : (priority === 'medium') ? 'darkorange' : 'teal';
 
     taskRight.appendChild(priorityIcon);
-
-    const moveIcon = document.createElement("i");
-    moveIcon.className = "fa-regular fa-square-caret-up task-icons ";
-    moveIcon.setAttribute('data-list-id', id);
-    moveIcon.title = "Move list";
-    taskRight.appendChild(moveIcon);
 
     const deleteIcon = document.createElement("i");
     deleteIcon.className = "fa-solid fa-trash-can task-icons task-deleter";
@@ -233,7 +292,7 @@ function createTask(taskTitle, dueDate, description, priority, id) {
     taskContainer.appendChild(taskDiv);
 }
 
-function editTaskPopup(title, description, date, priority, id, listvalue) {
+function editTaskPopup(title, description, date, priority, id) {
     const overlay = document.createElement('div');
     overlay.className = 'overlay3';
 
@@ -350,7 +409,6 @@ function editTaskPopup(title, description, date, priority, id, listvalue) {
 
     const listSelect = document.createElement('select');
     listSelect.id = 'thelist';
-    listSelect.value = listvalue;
     listSelect.required = true;
 
     midRight.appendChild(listSelect);
@@ -512,11 +570,11 @@ function validateAndEditTask(id) {
     if (isValid) {
         const selectedValue = listSelect.value;
         const description = document.getElementById('description');
-    
+
         deleteTask(id);
 
         const newTodo = new Todo(titleInput.value, description.value, dateInput.value, prioritySelect.value, id);
-    
+
         addTodoToTodoList(selectedValue, newTodo);
         logTodoListsToConsole();
         renderTasks()
@@ -524,7 +582,7 @@ function validateAndEditTask(id) {
     }
 }
 
-function createListOptions(todoLists) {
+function createListOptions(todoLists, listvalue) {
     const listSelect = document.getElementById('thelist');
 
     listSelect.innerHTML = '';
@@ -539,6 +597,8 @@ function createListOptions(todoLists) {
             listSelect.appendChild(listOption);
         }
     });
+
+    listSelect.value = listvalue;
 }
 
 function addTodoToTodoList(selectedValue, newTodo) {

@@ -48,8 +48,20 @@ function createNav() {
     addIcon.classList.add('fa-solid', 'fa-plus');
     addIcon.addEventListener('click', function () {
         newTaskPopup();
+
         const todoLists = getTodoLists();
-        createListOptions(todoLists);
+        const navButtons = document.querySelectorAll('.nav-buttons');
+        let activeNavButton = null;
+
+        for (const button of navButtons) {
+            if (button.classList.contains('active')) {
+                activeNavButton = button;
+                break;
+            }
+        }
+
+        const dataListId = activeNavButton.getAttribute('data-list-id');
+        createListOptions(todoLists, dataListId);
     })
 
     const title = document.createElement('h1');
@@ -235,7 +247,7 @@ function closeOverlay() {
     overlay.remove()
 }
 
-function createListOptions(todoLists) {
+function createListOptions(todoLists, listvalue) {
     const listSelect = document.getElementById('thelist');
 
     listSelect.innerHTML = '';
@@ -250,6 +262,8 @@ function createListOptions(todoLists) {
             listSelect.appendChild(listOption);
         }
     });
+
+    listSelect.value = listvalue;
 }
 
 function validateAndAddTask() {
@@ -357,6 +371,7 @@ function handleScreenWidthChange() {
     const screenWidth = window.innerWidth;
     const sidebar = document.querySelector('.sidebar');
     const main = document.querySelector('.main');
+    const button = document.getElementById('toggle-sidebar');
 
     if (screenWidth <= 768) {
         if (screenWidth <= 300) {
@@ -368,12 +383,16 @@ function handleScreenWidthChange() {
         sidebar.style.left = '-100%';
         main.style.gridTemplateColumns = '1fr'
         main.style.gridTemplateAreas = '"main-area"'
+        button.classList.remove('fa-bars-staggered');
+        button.classList.add('fa-bars');
     } else {
         sidebar.style.left = '0';
         sidebar.style.position = 'relative';
         sidebar.style.width = '';
         main.style.gridTemplateColumns = '300px 1fr'
         main.style.gridTemplateAreas = '"sidebar main-area"'
+        button.classList.remove('fa-bars');
+        button.classList.add('fa-bars-staggered');
     }
 }
 

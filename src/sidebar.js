@@ -20,27 +20,35 @@ function createSidebar() {
     });
 
     const today = createSidebarItem('today', 'fa-calendar-day', 'Today');
+    today.setAttribute('data-list-id', '111111')
     today.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(today);
+        initialiseMain(today.getAttribute('data-list-id'));
     });
 
     const upcoming = createSidebarItem('upcoming', 'fa-calendar-week', 'Upcoming');
+    upcoming.setAttribute('data-list-id', '222222')
     upcoming.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(upcoming);
+        initialiseMain(upcoming.getAttribute('data-list-id'));
     });
 
     const all = createSidebarItem('all', 'fa-calendar-days', 'All');
+    all.setAttribute('data-list-id', '333333')
     all.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(all);
+        initialiseMain(all.getAttribute('data-list-id'));
     });
 
     const important = createSidebarItem('important', 'fa-star', 'Important');
+    important.setAttribute('data-list-id', '444444')
     important.addEventListener("click", (e) => {
         if (e.target.classList.contains("active")) return;
         setActiveButton(important);
+        initialiseMain(important.getAttribute('data-list-id'));
     });
 
     const lists = document.createElement('li');
@@ -274,8 +282,16 @@ function renderTodoLists() {
         newLists.appendChild(listItem);
     });
 
+    const title = document.querySelector('.todo-title');
+    const titlecontent = title.textContent;
+
+
+
     const generatedDivs = document.getElementsByClassName("the-new-lists");
     for (const div of generatedDivs) {
+        if (div.textContent === titlecontent) {
+            setActiveButton(div)
+        }
         const trashIcon = div.querySelector(".trash .fa-trash-can");
         div.addEventListener("mouseenter", () => {
             trashIcon.style.display = "block";
