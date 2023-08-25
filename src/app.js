@@ -63,13 +63,13 @@ export function getTodoLists() {
     return todoListsJSON ? JSON.parse(todoListsJSON) : [];
 }
 
+export function saveTodoLists(todoLists) {
+    localStorage.setItem('todoLists', JSON.stringify(todoLists));
+}
+
 export function getTodoListById(id) {
     const todoLists = getTodoLists();
     return todoLists.find(todoList => todoList.id === id);
-}
-
-export function saveTodoLists(todoLists) {
-    localStorage.setItem('todoLists', JSON.stringify(todoLists));
 }
 
 export function findTodoById(todoId) {

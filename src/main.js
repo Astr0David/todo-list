@@ -125,44 +125,37 @@ export function renderTasks() {
     const priorityIcons = document.querySelectorAll('.task-priority');
     priorityIcons.forEach(icon => {
         icon.addEventListener('click', (event) => {
-            event.stopPropagation()
+            event.stopPropagation();
             const todoId = icon.getAttribute('data-list-id');
+            const todoLists = getTodoLists();
+
             const existingTodo = findTodoById(todoId)
 
-            const todoPriority = existingTodo.priority
+            const theTodoPriority = existingTodo.priority
+            console.log(theTodoPriority)
 
             let newPriority;
-            if (todoPriority === 'low') {
+            if (theTodoPriority === 'low') {
                 newPriority = 'medium';
-            } else if (todoPriority === 'medium') {
+            } else if (theTodoPriority === 'medium') {
                 newPriority = 'high';
-            } else if (todoPriority === 'high') {
+            } else if (theTodoPriority === 'high') {
                 newPriority = 'low';
             }
 
-            if (existingTodo) {
-                deleteTask(existingTodo.id)
+            const todoPriority = updateTodoPriority(todoLists, todoId, newPriority)
 
-                const updatedTodo = new Todo(
-                    existingTodo.title,
-                    existingTodo.description,
-                    existingTodo.dueDate,
-                    newPriority,
-                    existingTodo.id
-                );
-
-                addTodoToTodoList(dataListId, updatedTodo);
-                saveTodoLists(getTodoLists());
-
-                ;
-                renderTasks()
+            if (todoPriority) {
+                saveTodoLists(todoLists);
+                renderTasks();
             }
         });
     });
 
+
     const checkboxes = document.querySelectorAll('.task-check')
     for (const checkbox of checkboxes) {
-        checkbox.addEventListener('click', function(event) {
+        checkbox.addEventListener('click', function (event) {
             event.stopPropagation();
             const taskId = checkbox.getAttribute('data-list-id');
             deleteTask(taskId)
@@ -170,9 +163,23 @@ export function renderTasks() {
     }
 }
 
-function changePriority() {
+function updateTodoPriority(todoLists, todoId, newPriority) {
+    for (const todoList of todoLists) {
+        const existingTodoIndex = todoList.todos.findIndex(todo => todo.id === todoId);
+        if (existingTodoIndex !== -1) {
+            const existingTodo = todoList.todos[existingTodoIndex];
+            const updatedTodo = {
+                ...existingTodo,
+                priority: newPriority
+            };
 
+            todoList.todos.splice(existingTodoIndex, 1, updatedTodo);
+            return true;
+        }
+    }
+    return false;
 }
+
 
 function createTask(taskTitle, dueDate, description, priority, id) {
     const taskContainer = document.querySelector('.todo-section')
