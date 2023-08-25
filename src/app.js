@@ -1,6 +1,6 @@
 export class Todo {
-    constructor(title, description, dueDate, priority) {
-        this.id = uniqueId();
+    constructor( title, description, dueDate, priority, id = null) {
+        this.id = id || uniqueId();
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -71,6 +71,19 @@ export function getTodoListById(id) {
 
 export function saveTodoLists(todoLists) {
     localStorage.setItem('todoLists', JSON.stringify(todoLists));
+}
+
+export function findTodoById(todoId) {
+    const todoLists = getTodoLists();
+
+    for (const todoList of todoLists) {
+        const foundTodo = todoList.todos.find(todo => todo.id === todoId);
+        if (foundTodo) {
+            return foundTodo;
+        }
+    }
+
+    return null; 
 }
 
 export function logTodoListsToConsole() {

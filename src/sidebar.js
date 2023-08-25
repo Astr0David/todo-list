@@ -53,10 +53,6 @@ function createSidebar() {
 
     const newLists = document.createElement('div');
     newLists.classList.add('new-lists');
-    newLists.addEventListener("click", (e) => {
-        if (e.target.classList.contains("active")) return;
-        setActiveButton(e.target);
-    });
 
     const createNew = document.createElement('div');
     createNew.classList.add('create-new');
@@ -233,6 +229,10 @@ function deleteList(id) {
     saveTodoLists(updatedTodoLists);
 
     renderTodoLists();
+
+    const inbox = document.querySelector('.inbox');
+    setActiveButton(inbox)
+    initialiseMain('000000')
 }
 
 function closeOverlay2() {
@@ -251,7 +251,7 @@ function newListItem(name, id) {
     const newListItemChild2 = document.createElement('div');
     newListItemChild2.classList.add('trash');
     const theTrashIcon = document.createElement('i');
-    theTrashIcon.classList.add('fa-regular', 'fa-trash-can');
+    theTrashIcon.classList.add('fa-regular', 'fa-trash-can', 'list-deleter');
     theTrashIcon.setAttribute("data-list-id", id);
     newListItemChild2.appendChild(theTrashIcon);
 
@@ -284,15 +284,25 @@ function renderTodoLists() {
         div.addEventListener("mouseleave", () => {
             trashIcon.style.display = "none";
         });
+
+        div.addEventListener('click', function() {
+            if (div.classList.contains("active")) return;
+            setActiveButton(div);
+            initialiseMain(div.getAttribute('data-list-id'))
+
+        })
     }
 
-    const generatedBins = document.getElementsByClassName('fa-trash-can');
+    const accordion = document.querySelector('.accordion');
+    const generatedBins = accordion.getElementsByClassName('list-deleter');
     for (const bin of generatedBins) {
-        bin.addEventListener('click', function () {
+        bin.addEventListener('click', function (event) {
+            event.stopPropagation()
             const listId = bin.getAttribute('data-list-id');
             deleteListPopup(() => deleteList(listId));
         });
     }
+
 }
 
 function isDefaultTodoList(id) {

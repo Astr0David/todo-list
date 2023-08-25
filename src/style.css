@@ -462,6 +462,17 @@ body {
     cursor: pointer;
 }
 
+#deletetask {
+    font-size: 1.1rem;
+    padding: .5rem 2rem;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid transparent;
+    color: white;
+    background-color: #588157;
+    cursor: pointer;
+}
+
 .popup .popup-bot #addition:hover,
 .popup2 .popup-bot2 #deletelist:hover {
     transform: scale(1.05);
@@ -775,6 +786,17 @@ body {
     cursor: pointer;
 }
 
+#edittask {
+    font-size: 1.1rem;
+    padding: .5rem 2rem;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid transparent;
+    color: white;
+    background-color: #588157;
+    cursor: pointer;
+}
+
 .popup3 .popup-bot3 #addtask:hover {
     transform: scale(1.05);
 }
@@ -889,6 +911,10 @@ body {
 .left-top #long {
     word-wrap: break-word;
     overflow: hidden;
+}
+
+.fa-flag {
+    opacity: 70%;
 }
 
 @media (max-width: 600px) {
