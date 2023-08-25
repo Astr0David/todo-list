@@ -1,4 +1,4 @@
-import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById, findTodoById, logTodoListsToConsole } from "./app";
+import { TodoList, Todo, saveTodoLists, getTodoLists, getTodoListById, findTodoById } from "./app";
 
 function createMain(id) {
     const mainArea = document.querySelector('.main-area');
@@ -154,7 +154,7 @@ export function renderTasks() {
                 addTodoToTodoList(dataListId, updatedTodo);
                 saveTodoLists(getTodoLists());
 
-                logTodoListsToConsole();
+                ;
                 renderTasks()
             }
         });
@@ -576,7 +576,7 @@ function validateAndEditTask(id) {
         const newTodo = new Todo(titleInput.value, description.value, dateInput.value, prioritySelect.value, id);
 
         addTodoToTodoList(selectedValue, newTodo);
-        logTodoListsToConsole();
+        ;
         renderTasks()
         closeOverlay();
     }
@@ -621,7 +621,7 @@ function addTodoToTodoList(selectedValue, newTodo) {
     localStorage.setItem('todoLists', JSON.stringify(updatedTodoLists));
 
     renderTasks()
-    logTodoListsToConsole();
+        ;
 }
 
 export default function initialiseMain(id) {

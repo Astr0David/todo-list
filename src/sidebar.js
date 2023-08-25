@@ -1,4 +1,4 @@
-import { TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds } from "./app.js"
+import { TodoList, getTodoLists, saveTodoLists, getUsedIds, saveUsedIds } from "./app.js"
 import initialiseMain, { renderTasks } from "./main.js"
 
 function createSidebar() {
@@ -301,7 +301,7 @@ function renderTodoLists() {
             trashIcon.style.display = "none";
         });
 
-        div.addEventListener('click', function() {
+        div.addEventListener('click', function () {
             if (div.classList.contains("active")) return;
             setActiveButton(div);
             initialiseMain(div.getAttribute('data-list-id'))
@@ -343,7 +343,7 @@ function addNewList() {
         todoLists.push(newList);
         saveTodoLists(todoLists);
 
-        logTodoListsToConsole()
+
 
         const newLists = document.querySelector('.new-lists');
         newLists.appendChild(newListItem(inputValue, newList.id));
@@ -390,7 +390,7 @@ function sidebarAnimate() {
     const sidebar = document.querySelector('.sidebar');
     const button = document.getElementById('toggle-sidebar');
     const main = document.querySelector('.main');
-    
+
     if (screenWidth > 768) {
         if (sidebar.style.left === '' || sidebar.style.left === '0px') {
             sidebar.style.position = 'fixed';

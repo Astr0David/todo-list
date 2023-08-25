@@ -1,6 +1,6 @@
 import initializeSidebar from './sidebar'
 import { renderTasks } from './main'
-import { Todo, TodoList, getTodoLists, saveTodoLists, logTodoListsToConsole, getUsedIds, saveUsedIds, getTodoListById } from './app.js'
+import { Todo, TodoList, getTodoLists, saveTodoLists, getUsedIds, saveUsedIds, getTodoListById } from './app.js'
 
 function createNav() {
     const nav = document.createElement('div');
@@ -313,7 +313,7 @@ function validateAndAddTask() {
 
         const theTodo = new Todo(titleInput.value, description.value, dateInput.value, prioritySelect.value)
         addTodoToTodoList(selectedValue, theTodo);
-        logTodoListsToConsole()
+
         closeOverlay()
     }
 }
@@ -338,7 +338,7 @@ function addTodoToTodoList(selectedValue, newTodo) {
     localStorage.setItem('todoLists', JSON.stringify(updatedTodoLists));
 
     renderTasks()
-    logTodoListsToConsole();
+        ;
 }
 
 function createDefaultTodoLists() {

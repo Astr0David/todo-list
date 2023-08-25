@@ -1,5 +1,5 @@
 export class Todo {
-    constructor( title, description, dueDate, priority, id = null) {
+    constructor(title, description, dueDate, priority, id = null) {
         this.id = id || uniqueId();
         this.title = title;
         this.description = description;
@@ -46,7 +46,6 @@ export function uniqueId() {
 
     usedIds.push(newId);
     saveUsedIds(usedIds);
-    console.log(usedIds);
     return newId;
 }
 
@@ -83,10 +82,5 @@ export function findTodoById(todoId) {
         }
     }
 
-    return null; 
-}
-
-export function logTodoListsToConsole() {
-    const todoLists = getTodoLists();
-    console.log(JSON.stringify(todoLists, null, 2));
+    return null;
 }
